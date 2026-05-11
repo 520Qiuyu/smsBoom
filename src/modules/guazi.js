@@ -251,6 +251,6 @@ async function main(phone) {
   }
 }
 
-main("17607117684");
+// main("17607117684");
 
 export default main;

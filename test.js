@@ -1,0 +1,41 @@
+import axios from "axios";
+import https from "https";
+
+// 内网自签证书：Node 默认校验链会报 SELF_SIGNED_CERT_IN_CHAIN；ApiPost 常等价于「关闭 SSL 校验」。仅用于可信内网调试。
+const httpsAgent = new https.Agent({ rejectUnauthorized: false });
+
+const options = {
+  method: 'POST',
+  url: 'https://172.22.43.75/acp/v1/kubernetes/test-region/cronjobs/xgxt-main/ly-school-data-analyze-ui/exec',
+  // ApiPost 默认常不走系统代理；Node  axios 会读 HTTPS_PROXY，易导致 502 / 连错 upstream
+  proxy: false,
+  httpsAgent,
+  headers: {
+    accept: 'application/json, text/plain, */*',
+    'accept-language': 'en,zh-CN;q=0.9,zh;q=0.8',
+    authorization: 'Bearer eyJhbGciOiJSUzI1NiIsImtpZCI6IjM4NTg4YTdmNWM1MDU4ZmEwYWZjYTEwYzU2YzVjMTBmMGU4ZGI1ZjkifQ.eyJpc3MiOiJodHRwczovLzE3Mi4yMi40My43NS9kZXgiLCJzdWIiOiJDaVJoTm1Zek56UTFNQzB3WlRSbExUUTBNamN0T1dRMU1pMWhOR1UyTVRBMk1qVmpOVElTQld4dlkyRnMiLCJhdWQiOiJhbGF1ZGEtYXV0aCIsImV4cCI6MTc3ODI5MTM5NCwiaWF0IjoxNzc4MjA0OTk0LCJub25jZSI6ImFsYXVkYS1jb25zb2xlIiwiYXRfaGFzaCI6IkZpclFYd09UcWI4ZTc1N2UxVTZjQWciLCJjX2hhc2giOiJwazNDTG96S0dCclVWS2JrOHdLUXRnIiwiZW1haWwiOiJxaXV5dUBseS1za3kuY29tIiwiZW1haWxfdmVyaWZpZWQiOnRydWUsInJvbGVzIjpbInN5c3UtcHJvbW90aW9uIiwic3lzdS1uYW1lc3BhY2UtYWRtaW4iXSwibmFtZSI6IumCseWuhyIsInByZWZlcnJlZF91c2VybmFtZSI6InFpdXl1QGx5LXNreS5jb20iLCJleHQiOnsiaXNfYWRtaW4iOmZhbHNlLCJjb25uX2lkIjoibG9jYWwifSwic2lkIjoiY2Y0ZmU0NGEtNWRmMy00YmJkLTg3MTctZTkxODA3ZTIwNWJhIn0.nJXE0-oOnHc14-hQBPtcdcKbmUH4C2rlMNldlu7O1Frd_dCVIGWzJgyUtMdMK4fZcqvotbquVvVt4X-9PUoE6-2jw5CSyvJnUzigg58uK63Ajk5KANfFDHCPDdxf7nWWJ3snFiAnZmlXgt6X31XpAma1F816JPokg9EoszuQxpelWCjkV8DeQGfIwu8QSNpHK5iZuuLVOZXf0RiirL1Qw9f8I6cWlGZPHf_rrdUeVeHwICU9CUYyBlm5hXT9C_PR-iGqVQ4Fx9l5vO4EPffhz6cHWxqPyVzV_ksrPg7P830X0cGy48Fd4B9zN2qEOWfvZKZui9dex5LqAsRn53cbPw',
+    'cache-control': 'no-cache',
+    'content-type': 'application/json',
+    origin: 'https://172.22.43.75',
+    pragma: 'no-cache',
+    priority: 'u=1, i',
+    referer: 'https://172.22.43.75/console-acp/workspace/xgxt~test-region~xgxt-main/job/detail/ly-school-data-analyze-ui-1778206908',
+    'sec-ch-ua': '"Google Chrome";v="147", "Not.A/Brand";v="8", "Chromium";v="147"',
+    'sec-ch-ua-mobile': '?0',
+    'sec-ch-ua-platform': '"Windows"',
+    'sec-fetch-dest': 'empty',
+    'sec-fetch-mode': 'cors',
+    'sec-fetch-site': 'same-origin',
+    'user-agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/147.0.0.0 Safari/537.36',
+    Cookie: 'user_login=MTc3ODIwNDk5NHxEWDhFQVFMX2dBQUJFQUVRQUFELUEyTF9nQUFEQm5OMGNtbHVad3dQQUExaGRYUm9aVzUwYVdOaGRHVmtCR0p2YjJ3Q0FnQUJCbk4wY21sdVp3d0tBQWhwWkdWdWRHbDBlUWRiWFhWcGJuUTRDdjRDLUFELUF2UjdJbFZ6WlhKSlJDSTZJbUUyWmpNM05EVXdMVEJsTkdVdE5EUXlOeTA1WkRVeUxXRTBaVFl4TURZeU5XTTFNaUlzSWxWelpYSnVZVzFsSWpvaTZZS3g1YTZISWl3aVVISmxabVZ5Y21Wa1ZYTmxjbTVoYldVaU9pSnhhWFY1ZFVCc2VTMXphM2t1WTI5dElpd2lSVzFoYVd3aU9pSnhhWFY1ZFVCc2VTMXphM2t1WTI5dElpd2lSVzFoYVd4V1pYSnBabWxsWkNJNmRISjFaU3dpU1hOaFpHMXBiaUk2TUN3aVFXTmpiM1Z1ZENJNklpSXNJa2R5YjNWd2N5STZiblZzYkN3aVVtOXNaWE1pT2xzaWMzbHpkUzF3Y205dGIzUnBiMjRpTENKemVYTjFMVzVoYldWemNHRmpaUzFoWkcxcGJpSmRMQ0pEYjI1dVpXTjBiM0pFWVhSaElqb2laWGxLYkdKWFJuQmlRMGsyU1c1R2NHUlliREZSUjNnMVRGaE9jbVZUTldwaU1qQnBURU5LYjFsWVRtOUphbTlwVmxWV1MxUkdTa1pYV0d4UVlXMW9VRlJFU2xkV1IwNVpZWHBXVTAxWFRUQmFSM1J2VTFaR1YxRnRSbXBXZWtaSlZGYzFiMWRYVVhkU2EwNVdUVlZLTVZSc2FHRk5Sa1oxVldwT2FXSnRlR2hVVnpGelVtczVXVmw2YkZCaE0wSjVXVzAxZG1WRk9VZGpSMFpvVmxkb1VsUlhlRUprYXpGRlZtdEtUMkV3TlUxWk1WcEdUMVpDVWxCVU1HbE1RMHB2V1ZoT2IxSnVTblppVlZaMVpHbEpOa2xwU1hOSmJsWjZXbGhLZFZsWE1XeEphbTlwTmxsTGVEVmhOa2hKYVhkcFpGaE9iR05yYkVWSmFtOXBXVlJhYlUxNll6Qk9WRUYwVFVkVk1GcFRNREJPUkVrelRGUnNhMDVVU1hSWlZGSnNUbXBGZDA1cVNURlplbFY1U1dsM2FWbFhUbXBpTTFaMVpFTkpOa2xwU1hOSmJXeDZVVmRTZEdGWE5HbFBiVnBvWWtoT2JFeERTbk5aV0U0d1ZsaENhMWxZVW14VlIwWjZZek5rYTFaSGJIUmFVMGsyU1dwQmQwMUVSWFJOUkVWMFRVUkdWVTFFUVRaTlJFRTJUVVJDWVVscGQybGlWMFp3WWtOSk5rbHVSbkJrV0d3eFVVZDROVXhZVG5KbFV6VnFZakl3YVV4RFNtMWhXRXA2WkVWNGRsb3liSFZXUjJ4MFdsTkpOa2xxU1hkTmFsRjBUVlJCZEUxNlJsVk5SRmsyVGxSRk5rMUVRbUZKYmpBOUluMEdjM1J5YVc1bkRBMEFDMk52Ym01bFkzUnZja2xFQm5OMGNtbHVad3dIQUFWc2IyTmhiQT09fDFYbjYG0T6RnvHyke8wGSvVelWZ6JGRpzNM8PEqG7ux; cpaas_id_token="Bearer eyJhbGciOiJSUzI1NiIsImtpZCI6IjM4NTg4YTdmNWM1MDU4ZmEwYWZjYTEwYzU2YzVjMTBmMGU4ZGI1ZjkifQ.eyJpc3MiOiJodHRwczovLzE3Mi4yMi40My43NS9kZXgiLCJzdWIiOiJDaVJoTm1Zek56UTFNQzB3WlRSbExUUTBNamN0T1dRMU1pMWhOR1UyTVRBMk1qVmpOVElTQld4dlkyRnMiLCJhdWQiOiJhbGF1ZGEtYXV0aCIsImV4cCI6MTc3ODI5MTM5NCwiaWF0IjoxNzc4MjA0OTk0LCJub25jZSI6ImFsYXVkYS1jb25zb2xlIiwiYXRfaGFzaCI6IkZpclFYd09UcWI4ZTc1N2UxVTZjQWciLCJjX2hhc2giOiJwazNDTG96S0dCclVWS2JrOHdLUXRnIiwiZW1haWwiOiJxaXV5dUBseS1za3kuY29tIiwiZW1haWxfdmVyaWZpZWQiOnRydWUsInJvbGVzIjpbInN5c3UtcHJvbW90aW9uIiwic3lzdS1uYW1lc3BhY2UtYWRtaW4iXSwibmFtZSI6IumCseWuhyIsInByZWZlcnJlZF91c2VybmFtZSI6InFpdXl1QGx5LXNreS5jb20iLCJleHQiOnsiaXNfYWRtaW4iOmZhbHNlLCJjb25uX2lkIjoibG9jYWwifSwic2lkIjoiY2Y0ZmU0NGEtNWRmMy00YmJkLTg3MTctZTkxODA3ZTIwNWJhIn0.nJXE0-oOnHc14-hQBPtcdcKbmUH4C2rlMNldlu7O1Frd_dCVIGWzJgyUtMdMK4fZcqvotbquVvVt4X-9PUoE6-2jw5CSyvJnUzigg58uK63Ajk5KANfFDHCPDdxf7nWWJ3snFiAnZmlXgt6X31XpAma1F816JPokg9EoszuQxpelWCjkV8DeQGfIwu8QSNpHK5iZuuLVOZXf0RiirL1Qw9f8I6cWlGZPHf_rrdUeVeHwICU9CUYyBlm5hXT9C_PR-iGqVQ4Fx9l5vO4EPffhz6cHWxqPyVzV_ksrPg7P830X0cGy48Fd4B9zN2qEOWfvZKZui9dex5LqAsRn53cbPw"; cpaas_refresh_token=CjN5M3hubWVxb20yYXdnbmppM2R4azJqenNud3Ezc2VpcHRycjNtam9saHYzdmx1N25laHkSM21xZ2F3YnNweWNveGhvaXpvYnlxanhpdXl1ZG1mbnBkYTVnZXlxb29kY3U2eGlhNGdvNA',
+    'Accept-Encoding': 'gzip, deflate, br',
+    Connection: 'keep-alive'
+  },
+  data: '{}'
+};
+
+axios.request(options).then(function (response) {
+  console.log(response.data);
+}).catch(function (error) {
+  console.error(error);
+});
