@@ -11,6 +11,9 @@ dependencies:
   crypto:
     specifier: ^1.0.1
     version: 1.0.1
+  dotenv:
+    specifier: ^18.0.9
+    version: 18.0.9
 
 packages:
 
@@ -51,6 +54,12 @@ packages:
   /delayed-stream@1.0.0:
     resolution: {integrity: sha512-ZySD7Nf91aLB0RxL4KGrKHBXl7Eds1DAmEdcoVawXnLD7SDhpNgtuII2aAkg7a7QS41jxPSZ17p4VdGnMHk3MQ==}
     engines: {node: '>=0.4.0'}
+    dev: false
+
+  /dotenv@18.0.9:
+    resolution: {integrity: sha512-3fVOW4cB02R066PUSwn8O4TJyz9NckQl7F81blIbaq9jKBm2tSmOKky7ZHIXzGvkVPXCSn6jkpziBPZdGFs8Tw==}
+    engines: {node: '>=12'}
+    hasBin: true
     dev: false
 
   /dunder-proto@1.0.1:

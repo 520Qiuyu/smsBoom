@@ -130,6 +130,6 @@ async function main(phone) {
   }
 }
 
-// main("17607117684");
+// main(process.env.PHONE);
 
 export default main;

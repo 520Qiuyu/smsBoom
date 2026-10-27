@@ -5,7 +5,14 @@
   "main": "index.js",
   "type": "module",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "lab:server": "node defense-lab/server.mjs",
+    "lab:sim": "node defense-lab/simulate.mjs",
+    "sms:dry": "node src/modules/sms-test-tool/cli.js --dry",
+    "sms:list": "node src/modules/sms-test-tool/cli.js --list",
+    "sms:run": "node src/modules/sms-test-tool/cli.js",
+    "gen:endpoints": "node scripts/extract-endpoints.mjs",
+    "gen:apis": "node scripts/split-endpoints.mjs"
   },
   "keywords": [
     "短信轰炸",
@@ -15,6 +22,7 @@
   "license": "ISC",
   "dependencies": {
     "axios": "^1.15.2",
-    "crypto": "^1.0.1"
+    "crypto": "^1.0.1",
+    "dotenv": "^18.0.9"
   }
 }
